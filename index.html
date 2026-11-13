@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#2875e8">
+<title>Study AI — помощник в учёбе</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f4f7fc;
+  color: #17243b;
+}
+
+header {
+  background: white;
+  padding: 18px 20px;
+  border-bottom: 1px solid #e6ebf3;
+}
+
+.logo {
+  font-size: 23px;
+  font-weight: 800;
+  color: #2875e8;
+}
+
+.logo span {
+  color: #17243b;
+}
+
+header p {
+  margin: 6px 0 0;
+  color: #77849a;
+  font-size: 13px;
+}
+
+main {
+  max-width: 720px;
+  margin: auto;
+  padding: 20px 15px 45px;
+}
+
+.hero {
+  background: linear-gradient(135deg,#2875e8,#69a5ff);
+  padding: 25px 21px;
+  border-radius: 20px;
+  color: white;
+  margin-bottom: 23px;
+}
+
+.hero h1 {
+  font-size: 26px;
+  margin: 0 0 10px;
+}
+
+.hero p {
+  line-height: 1.5;
+  margin: 0;
+}
+
+h2 {
+  font-size: 19px;
+  margin: 24px 0 13px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2,minmax(0,1fr));
+  gap: 11px;
+}
+
+.tool {
+  border: 1px solid #e4eaf3;
+  border-radius: 15px;
+  background: white;
+  padding: 16px 12px;
+  text-align: left;
+  cursor: pointer;
+  color: #17243b;
+  min-height: 112px;
+  font-family: Arial,sans-serif;
+}
+
+.tool:active {
+  background: #edf4ff;
+}
+
+.tool .emoji {
+  font-size: 25px;
+}
+
+.tool strong {
+  display: block;
+  margin: 9px 0 5px;
+}
+
+.tool small {
+  color: #78869b;
+  line-height: 1.4;
+}
+
+.panel {
+  margin-top: 22px;
+  padding: 19px;
+  background: white;
+  border: 1px solid #e4eaf3;
+  border-radius: 18px;
+}
+
+.panel h2 {
+  margin-top: 0;
+}
+
+label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin: 14px 0 7px;
+}
+
+input,
+textarea,
+select {
+  display: block;
+  width: 100%;
+  min-height: 48px;
+  border: 2px solid #cbd8eb;
+  border-radius: 12px;
+  padding: 13px;
+  font-size: 16px;
+  font-family: Arial,sans-serif;
+  color: #17243b !important;
+  -webkit-text-fill-color: #17243b;
+  caret-color: #2875e8;
+  background: #ffffff !important;
+  pointer-events: auto;
+  user-select: text;
+  -webkit-user-select: text;
+  position: relative;
+  z-index: 5;
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: 2px solid #2875e8;
+  border-color: #2875e8;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+.primary {
+  border: 0;
+  border-radius: 11px;
+  padding: 14px;
+  width: 100%;
+  margin-top: 14px;
+  background: #2875e8;
+  color: white;
+  font-weight: bold;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.result {
+  display: none;
+  background: #eff5ff;
+  border: 1px solid #d9e8ff;
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 16px;
+  line-height: 1.6;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.note {
+  font-size: 12px;
+  color: #7a879b;
+  line-height: 1.5;
+}
+
+footer {
+  text-align: center;
+  color: #8793a5;
+  font-size: 12px;
+  padding: 15px;
+}
+
+@media(max-width:380px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">Study <span>AI</span> ✦</div>
+  <p>Твой помощник в мире знаний</p>
+</header>
+
+<main>
+
+<section class="hero">
+  <h1>Учиться проще вместе с AI!</h1>
+  <p>Разбирайся в сложных темах, проверяй знания и планируй обучение в одном месте.</p>
+</section>
+
+<h2>Что будем изучать сегодня?</h2>
+
+<div class="grid">
+
+<button class="tool" onclick="openTool('explain')">
+  <span class="emoji">📚</span>
+  <strong>Объяснение тем</strong>
+  <small>Разбирай сложное простыми словами</small>
+</button>
+
+<button class="tool" onclick="openTool('quiz')">
+  <span class="emoji">📝</span>
+  <strong>Тесты</strong>
+  <small>Проверяй свои знания</small>
+</button>
+
+<button class="tool" onclick="openTool('cards')">
+  <span class="emoji">🧠</span>
+  <strong>Карточки</strong>
+  <small>Запоминай важную информацию</small>
+</button>
+
+<button class="tool" onclick="openTool('plan')">
+  <span class="emoji">📅</span>
+  <strong>План подготовки</strong>
+  <small>Организуй занятия</small>
+</button>
+
+<button class="tool" onclick="openTool('math')">
+  <span class="emoji">➗</span>
+  <strong>Математика</strong>
+  <small>Решай примеры</small>
+</button>
+
+<button class="tool" onclick="openTool('text')">
+  <span class="emoji">✍️</span>
+  <strong>Помощник по текстам</strong>
+  <small>Улучшай свои тексты</small>
+</button>
+
+</div>
+
+<section class="panel" id="workspace">
+  <h2 id="toolTitle">✨ Начнём обучение!</h2>
+  <p id="toolDescription">Выбери любой инструмент выше. Здесь появится твой помощник.</p>
+  <div id="fields"></div>
+  <div class="result" id="result"></div>
+</section>
+
+<p class="note">
+Учебный прототип Study AI. Работает бесплатно и без подключения внешней нейросети. Ответы создаются локально и пока ограничены простыми функциями.
+</p>
+
+</main>
+
+<footer>Study AI · Учись с интересом ✦</footer>
+
+<script>
+const titles = {
+  explain: ["📚 Объяснение темы","Напиши тему, которую хочешь понять."],
+  quiz: ["📝 Генератор тестов","Создай тренировочные вопросы."],
+  cards: ["🧠 Карточки","Введи материал для повторения."],
+  plan: ["📅 План подготовки","Составь план занятий."],
+  math: ["➗ Математика","Введи арифметический пример."],
+  text: ["✍️ Помощник по текстам","Вставь свой текст для анализа."]
+};
+
+let current = "";
+
+function makeField(labelText, id, placeholder, type = "text") {
+  const wrapper = document.createElement("div");
+
+  const label = document.createElement("label");
+  label.textContent = labelText;
+
+  const input = document.createElement("input");
+  input.id = id;
+  input.type = type;
+  input.placeholder = placeholder;
+  input.autocomplete = "off";
+
+  wrapper.append(label, input);
+  return wrapper;
+}
+
+function makeArea(labelText, id, placeholder) {
+  const wrapper = document.createElement("div");
+
+  const label = document.createElement("label");
+  label.textContent = labelText;
+
+  const area = document.createElement("textarea");
+  area.id = id;
+  area.placeholder = placeholder;
+
+  wrapper.append(label, area);
+  return wrapper;
+}
+
+function makeSelect(labelText, id, options) {
+  const wrapper = document.createElement("div");
+
+  const label = document.createElement("label");
+  label.textContent = labelText;
+
+  const select = document.createElement("select");
+  select.id = id;
+
+  options.forEach(optionText => {
+    const option = document.createElement("option");
+    option.textContent = optionText;
+    option.value = optionText;
+    select.appendChild(option);
+  });
+
+  wrapper.append(label, select);
+  return wrapper;
+}
+
+function openTool(name) {
+  current = name;
+
+  document.getElementById("toolTitle").textContent = titles[name][0];
+  document.getElementById("toolDescription").textContent = titles[name][1];
+
+  const fields = document.getElementById("fields");
+  const result = document.getElementById("result");
+
+  fields.replaceChildren();
+  result.style.display = "none";
+
+  if (name === "explain") {
+    fields.appendChild(makeField(
+      "Тема","topic","Например: дроби, фотосинтез..."
+    ));
+
+    fields.appendChild(makeSelect(
+      "Класс","grade",
+      Array.from({length:11},(_,i)=>(i+1)+" класс")
+    ));
+  }
+
+  if (name === "quiz") {
+    fields.appendChild(makeField(
+      "Предмет","subject","Например: математика"
+    ));
+    fields.appendChild(makeField(
+      "Тема","quizTopic","Например: умножение"
+    ));
+  }
+
+  if (name === "cards") {
+    fields.appendChild(makeArea(
+      "Материал","material",
+      "Введи факты или определения, разделяя их точками."
+    ));
+  }
+
+  if (name === "plan") {
+    fields.appendChild(makeField(
+      "Предмет","planSubject","Например: английский"
+    ));
+    fields.appendChild(makeField(
+      "Сколько дней есть?","days","Например: 5","number"
+    ));
+    fields.appendChild(makeField(
+      "Сколько минут в день?","minutes","Например: 30","number"
+    ));
+  }
+
+  if (name === "math") {
+    fields.appendChild(makeField(
+      "Пример","expression","Например: 25 + 17"
+    ));
+  }
+
+  if (name === "text") {
+    fields.appendChild(makeArea(
+      "Твой текст","userText","Вставь текст сюда..."
+    ));
+  }
+
+  const button = document.createElement("button");
+  button.className = "primary";
+  button.textContent = "Выполнить ✨";
+  button.type = "button";
+  button.addEventListener("click", runTool);
+
+  fields.appendChild(button);
+
+  document.getElementById("workspace").scrollIntoView({
+    behavior:"smooth",
+    block:"start"
+  });
+}
+
+function get(id) {
+  const element = document.getElementById(id);
+  return element ? element.value.trim() : "";
+}
+
+function show(text) {
+  const result = document.getElementById("result");
+  result.textContent = text;
+  result.style.display = "block";
+}
+
+function calculate(expression) {
+  const match = expression.match(
+    /^\s*(-?\d+(?:\.\d+)?)\s*([+\-*/×÷])\s*(-?\d+(?:\.\d+)?)\s*$/
+  );
+
+  if (!match) return null;
+
+  const a = Number(match[1]);
+  const operator = match[2];
+  const b = Number(match[3]);
+
+  let result;
+
+  if (operator === "+") result = a + b;
+  if (operator === "-") result = a - b;
+  if (operator === "*" || operator === "×") result = a * b;
+  if (operator === "/" || operator === "÷") {
+    if (b === 0) return "division";
+    result = a / b;
+  }
+
+  return Number.isFinite(result) ? result : null;
+}
+
+function runTool() {
+  let answer = "";
+
+  if (current === "explain") {
+    const topic = get("topic");
+    const grade = get("grade");
+
+    if (!topic) return show("Сначала введи тему.");
+
+    answer =
+`Тема: ${topic}
+Уровень: ${grade}
+
+Давай разберёмся!
+
+1. Найди определение темы в учебнике.
+2. Выпиши главные понятия.
+3. Разбери один пример.
+4. Попробуй объяснить тему своими словами.
+5. Проверь, что ты понял материал.
+
+Это учебный шаблон, а не ответ нейросети.`;
+  }
+
+  if (current === "quiz") {
+    const subject = get("subject");
+    const topic = get("quizTopic");
+
+    if (!subject || !topic) {
+      return show("Заполни оба поля.");
+    }
+
+    answer =
+`Тренировка: ${subject}
+Тема: ${topic}
+
+Вопрос 1. Что означает главное понятие темы?
+
+Вопрос 2. Как применить его на практике?
+
+Вопрос 3. Приведи собственный пример.
+
+Попробуй ответить письменно и проверь ответы по учебнику.`;
+  }
+
+  if (current === "cards") {
+    const material = get("material");
+
+    if (!material) return show("Сначала добавь материал.");
+
+    const parts = material
+      .split(/[.!?;\n]+/)
+      .filter(x => x.trim());
+
+    answer = "Твои карточки для повторения:\n\n" +
+      parts.map((p,i) =>
+        `Карточка ${i+1}\nВопрос: Что ты помнишь об этом факте?\nОтвет: ${p.trim()}`
+      ).join("\n\n");
+  }
+
+  if (current === "plan") {
+    const subject = get("planSubject");
+    const days = Number(get("days"));
+    const minutes = Number(get("minutes"));
+
+    if (
+      !subject ||
+      !Number.isInteger(days) || days < 1 || days > 30 ||
+      !Number.isInteger(minutes) || minutes < 5 || minutes > 240
+    ) {
+      return show("Укажи предмет, от 1 до 30 дней и от 5 до 240 минут.");
+    }
+
+    answer = `Твой план: ${subject}\n\n` +
+      Array.from({length:days},(_,i) =>
+        `День ${i+1}: ${minutes} минут\n• Повтори прошлую тему\n• Изучи новый материал\n• Реши несколько заданий\n• Проверь, что запомнил`
+      ).join("\n\n");
+  }
+
+  if (current === "math") {
+    const expression = get("expression");
+
+    if (!expression) return show("Введи пример.");
+
+    const result = calculate(expression);
+
+    if (result === "division") {
+      return show("На ноль делить нельзя.");
+    }
+
+    if (result === null) {
+      return show("Пока поддерживаются примеры только с двумя числами и одним действием. Например: 25 + 17");
+    }
+
+    answer =
+`Пример: ${expression}
+
+Ответ: ${result}
+
+Попробуй проверить результат обратным действием.`;
+  }
+
+  if (current === "text") {
+    const text = get("userText");
+
+    if (!text) return show("Сначала вставь текст.");
+
+    const sentences = text
+      .split(/[.!?]+/)
+      .filter(x => x.trim()).length;
+
+    const words = text.trim().split(/\s+/).length;
+
+    answer =
+`Анализ текста:
+
+Количество слов: ${words}
+Количество предложений: ${sentences}
+
+Советы:
+
+• Проверь орфографию.
+• Раздели слишком длинные предложения.
+• Убедись, что у текста есть начало, основная часть и заключение.
+• Проверь, понятна ли главная мысль.
+
+Это базовый анализ без нейросети.`;
+  }
+
+  show(answer);
+}
+</script>
+
+</body>
+</html>
